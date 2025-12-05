@@ -89,7 +89,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => HomeScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => HomeScreen(
+                        selectedLanguage: 'English',
+                      ), // Pass the selected language
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -144,7 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => SignupScreen()),
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            SignupScreen(selectedLanguage: 'English'),
+                      ),
                     );
                   },
                   child: Text.rich(

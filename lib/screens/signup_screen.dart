@@ -3,6 +3,10 @@ import 'login_screen.dart';
 import 'home_screen.dart'; // Import the HomeScreen
 
 class SignupScreen extends StatefulWidget {
+  final String selectedLanguage;
+
+  const SignupScreen({required this.selectedLanguage});
+
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
@@ -13,6 +17,18 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String title = widget.selectedLanguage == 'العربية'
+        ? 'إنشاء حساب'
+        : widget.selectedLanguage == 'اردو'
+        ? 'اکاؤنٹ بنائیں'
+        : 'Create an Account';
+
+    String subtitle = widget.selectedLanguage == 'العربية'
+        ? 'ابدأ رحلتك لتلاوة القرآن المثالية.'
+        : widget.selectedLanguage == 'اردو'
+        ? 'قرآن کی بہترین تلاوت کے سفر کا آغاز کریں۔'
+        : 'Begin your journey to perfect recitation.';
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -22,7 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
             children: [
               // Page Title Section
               Text(
-                'Create an Account',
+                title,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -31,7 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: 6),
               Text(
-                'Begin your journey to perfect recitation.',
+                subtitle,
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               SizedBox(height: 30),
@@ -87,7 +103,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => HomeScreen()),
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          HomeScreen(selectedLanguage: widget.selectedLanguage),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(

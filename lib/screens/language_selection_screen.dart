@@ -125,7 +125,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                 onTap: selectedLanguage.isNotEmpty
                     ? () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignupScreen()),
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SignupScreen(selectedLanguage: selectedLanguage),
+                        ),
                       )
                     : null,
               ),
