@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "flutter run",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run"
+			]
+		},
+		{
+			"label": "flutter run",
+			"type": "shell",
+			"command": "flutter",
+			"args": [
+				"run"
+			]
+		}
+	]
+}

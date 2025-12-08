@@ -22,7 +22,6 @@ void main() {
 
     // Verify that the language buttons are displayed.
     expect(find.text('English'), findsOneWidget);
-    expect(find.text('العربية'), findsOneWidget);
     expect(find.text('اردو'), findsOneWidget);
 
     // Verify that the Get Started button is displayed.

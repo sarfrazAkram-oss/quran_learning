@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
-import 'signup_screen.dart';
-import 'login_screen.dart';
+import 'onboarding/onboarding_screen.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   @override
@@ -15,55 +14,37 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF181A1B),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-            image: AssetImage(
-              'assets/star_pattern.png',
-            ), // Replace with your star pattern asset
-            fit: BoxFit.cover,
-          ),
-        ),
+        // color removed from here
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Quran Icon Button
+              SizedBox(height: 60),
               Container(
-                margin: EdgeInsets.only(top: 20), // Add spacing from the top
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Color(0xFFA7DCE5),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: Offset(2, 2),
-                    ),
-                  ],
-                ),
-                child: Center(
+                margin: EdgeInsets.only(bottom: 40),
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: ClipOval(
                   child: Image.asset(
-                    'assets/quran_icon.png',
-                    width: 32,
-                    height: 32,
+                    'assets/image.png',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-
-              SizedBox(height: 20),
 
               // Main Heading
               Text(
                 'As-salamu alaykum',
                 style: TextStyle(
                   fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1D3A4A),
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -75,8 +56,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                 'Begin your journey to perfect Quran recitation.',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF5A6F7F),
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -89,8 +70,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                 'Choose your language',
                 style: TextStyle(
                   fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1D3A4A),
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -102,12 +83,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                 text: 'English',
                 isSelected: selectedLanguage == 'English',
                 onTap: () => setState(() => selectedLanguage = 'English'),
-              ),
-              SizedBox(height: 16),
-              CustomButton(
-                text: 'العربية',
-                isSelected: selectedLanguage == 'العربية',
-                onTap: () => setState(() => selectedLanguage = 'العربية'),
               ),
               SizedBox(height: 16),
               CustomButton(
@@ -126,31 +101,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     ? () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              SignupScreen(selectedLanguage: selectedLanguage),
+                          builder: (context) => OnboardingScreen(),
                         ),
                       )
                     : null,
-              ),
-
-              SizedBox(height: 30),
-
-              // Bottom Login Text
-              GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Already have an account? Log In',
-                      style: TextStyle(fontSize: 15, color: Color(0xFF5A6F7F)),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 20), // Add spacing below the text
-                  ],
-                ),
               ),
             ],
           ),
