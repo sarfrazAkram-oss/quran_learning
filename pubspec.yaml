@@ -34,6 +34,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  syncfusion_flutter_pdfviewer: ^31.2.16
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,36 @@ flutter:
     - assets/image.png
     - assets/image3.jfif
     - assets/image4.jfif
+    - "assets/Colour Coded Quran Juz 01 (1).pdf"
+    - "assets/Colour Coded Quran Juz 02 (1).pdf"
+    - assets/Colour Coded Quran Juz 03.pdf
+    - assets/Colour Coded Quran Juz 04.pdf
+    - "assets/Colour Coded Quran Juz 05 (1).pdf"
+    - assets/Colour Coded Quran Juz 06.pdf
+    - assets/Colour Coded Quran Juz 07.pdf
+    - assets/Colour Coded Quran Juz 08.pdf
+    - assets/Colour Coded Quran Juz 09.pdf
+    - assets/Colour Coded Quran Juz 10.pdf
+    - assets/Colour Coded Quran Juz 11.pdf
+    - assets/Colour Coded Quran Juz 12.pdf
+    - assets/Colour Coded Quran Juz 13.pdf
+    - assets/Colour Coded Quran Juz 14.pdf
+    - assets/Colour Coded Quran Juz 15.pdf
+    - assets/Colour Coded Quran Juz 16.pdf
+    - assets/Colour Coded Quran Juz 17.pdf
+    - assets/Colour Coded Quran Juz 18.pdf
+    - assets/Colour Coded Quran Juz 19.pdf
+    - assets/Colour Coded Quran Juz 20.pdf
+    - assets/Colour Coded Quran Juz 21.pdf
+    - assets/Colour Coded Quran Juz 22.pdf
+    - assets/Colour Coded Quran Juz 23.pdf
+    - assets/Colour Coded Quran Juz 24.pdf
+    - assets/Colour Coded Quran Juz 25.pdf
+    - assets/Colour Coded Quran Juz 26.pdf
+    - assets/Colour Coded Quran Juz 27.pdf
+    - assets/Colour Coded Quran Juz 28.pdf
+    - assets/Colour Coded Quran Juz 29.pdf
+    - assets/Colour Coded Quran Juz 30.pdf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
