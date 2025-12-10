@@ -63,19 +63,20 @@ class HomeScreen extends StatelessWidget {
               children: [
                 _FeatureCard(
                   width: cardWidth,
-                  title: 'Holy Quran',
-                  subtitle: 'Read the Holy Quran',
                   icon: Icon(
                     Icons.menu_book_rounded,
                     size: 45,
                     color: accentColor,
                   ),
+                  title: 'Holy Quran',
+                  subtitle: 'Read the Holy Quran',
+                  onTap: () => Navigator.of(context).pushNamed('/holy-quran'),
                 ),
                 _FeatureCard(
                   width: cardWidth,
+                  icon: Icon(Icons.graphic_eq, size: 45, color: accentColor),
                   title: 'Tajweed Quran',
                   subtitle: 'Learn pronunciation',
-                  icon: Icon(Icons.graphic_eq, size: 45, color: accentColor),
                   onTap: () => Navigator.of(context).pushNamed('/tajweed'),
                 ),
               ],
@@ -86,23 +87,23 @@ class HomeScreen extends StatelessWidget {
               children: [
                 _FeatureCard(
                   width: cardWidth,
-                  title: 'Go To Page',
-                  subtitle: 'Jump to a specific page',
                   icon: Icon(
                     Icons.menu_book_outlined,
                     size: 45,
                     color: accentColor,
                   ),
+                  title: 'Go To Page',
+                  subtitle: 'Jump to a specific page',
                 ),
                 _FeatureCard(
                   width: cardWidth,
-                  title: 'Bookmarks',
-                  subtitle: 'Access your saved pages',
                   icon: Icon(
                     Icons.bookmark_rounded,
                     size: 45,
                     color: accentColor,
                   ),
+                  title: 'Bookmarks',
+                  subtitle: 'Access your saved pages',
                 ),
               ],
             ),
@@ -112,15 +113,15 @@ class HomeScreen extends StatelessWidget {
               children: [
                 _FeatureCard(
                   width: cardWidth,
+                  icon: Icon(Icons.mosque, size: 45, color: accentColor),
                   title: 'Prayer Timing',
                   subtitle: 'View daily schedules',
-                  icon: Icon(Icons.mosque, size: 45, color: accentColor),
                 ),
                 _FeatureCard(
                   width: cardWidth,
+                  icon: _CounterIcon(color: accentColor),
                   title: 'Tasbeeh Counter',
                   subtitle: 'Digital counter for dhikr',
-                  icon: _CounterIcon(color: accentColor),
                 ),
               ],
             ),

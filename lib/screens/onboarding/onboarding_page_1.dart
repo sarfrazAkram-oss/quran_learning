@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../widgets/onboarding_widgets.dart';
 
 class OnboardingPage1 extends StatelessWidget {
   final bool showTop;

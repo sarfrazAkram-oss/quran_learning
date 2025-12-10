@@ -43,8 +43,9 @@ class _ParaDetailScreenState extends State<ParaDetailScreen> {
       return;
     }
 
-    final desiredZoom =
-        (_viewportHeight! / pageHeight).clamp(0.5, 5.0) as double;
+    final desiredZoom = (_viewportHeight! / pageHeight)
+        .clamp(0.5, 5.0)
+        .toDouble();
     if (_lastAppliedZoom != null &&
         (_lastAppliedZoom! - desiredZoom).abs() < 0.02) {
       return;

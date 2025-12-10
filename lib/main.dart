@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/language_selection_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/tajweed_surah_list_screen.dart';
+import 'screens/holy_quran_para_list_screen.dart';
 import 'screens/para_detail_screen.dart';
 import 'data/para_data.dart';
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
           return HomeScreen(selectedLanguage: language);
         },
         '/tajweed': (context) => const TajweedSurahListScreen(),
+        '/holy-quran': (context) => const HolyQuranParaListScreen(),
       },
       onGenerateRoute: (settings) {
         final name = settings.name;
