@@ -4,9 +4,14 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../data/holy_quran_para_data.dart';
 
 class HolyQuranParaDetailScreen extends StatefulWidget {
-  final HolyQuranPara para;
+  const HolyQuranParaDetailScreen({
+    super.key,
+    required this.para,
+    this.initialPage = 1,
+  });
 
-  const HolyQuranParaDetailScreen({super.key, required this.para});
+  final HolyQuranPara para;
+  final int initialPage;
 
   @override
   State<HolyQuranParaDetailScreen> createState() =>
@@ -84,6 +89,13 @@ class _HolyQuranParaDetailScreenState extends State<HolyQuranParaDetailScreen> {
             scrollDirection: PdfScrollDirection.horizontal,
             onDocumentLoaded: (details) {
               _firstPageSize = details.document.pages[0].size;
+              final int clampedPage = widget.initialPage.clamp(
+                1,
+                details.document.pages.count,
+              );
+              if (_pdfController.pageNumber != clampedPage) {
+                _pdfController.jumpToPage(clampedPage);
+              }
               _updateZoomToFitHeight();
             },
           );

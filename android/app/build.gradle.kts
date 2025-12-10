@@ -42,3 +42,11 @@ android {
 flutter {
     source = "../.."
 }
+
+// Gradle attempts to hash Flutter assets while the Flutter tool is still
+// writing them on Windows, which causes intermittent file-lock errors.
+tasks.matching { task ->
+    task.name == "compileFlutterBuildDebug" || task.name == "compileFlutterBuildRelease"
+}.configureEach {
+    doNotTrackState("Avoid hashing locked Flutter assets on Windows")
+}
