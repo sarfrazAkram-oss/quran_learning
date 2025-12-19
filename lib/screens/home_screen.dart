@@ -5,9 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../services/calendar_service.dart';
+import '../services/prayer_time_service.dart';
 import '../services/quran_page_service.dart';
 import 'bookmark/bookmark_screen.dart';
+import 'daily_dua_screen.dart';
 import 'holy_quran_para_detail_screen.dart';
+import 'prayer_timing_screen.dart';
+import 'tasbeeh_screen.dart';
+
+String _formatCountdown(Duration duration) {
+  final Duration safe = duration.isNegative ? Duration.zero : duration;
+  final int hours = safe.inHours;
+  final int minutes = safe.inMinutes.remainder(60);
+  final int seconds = safe.inSeconds.remainder(60);
+  return '${hours.toString().padLeft(2, '0')} : '
+      '${minutes.toString().padLeft(2, '0')} : '
+      '${seconds.toString().padLeft(2, '0')}';
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.selectedLanguage = ''});
@@ -24,17 +38,20 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _pageNumberController = TextEditingController();
 
   late Future<CalendarMonthData> _calendarFuture;
+  late final PrayerTimesController _prayerController;
 
   @override
   void initState() {
     super.initState();
     _calendarFuture = _calendarService.fetchMonth(DateTime.now());
+    _prayerController = PrayerTimesController()..initialize();
   }
 
   @override
   void dispose() {
     _calendarService.dispose();
     _pageNumberController.dispose();
+    _prayerController.dispose();
     super.dispose();
   }
 
@@ -58,6 +75,26 @@ class _HomeScreenState extends State<HomeScreen> {
         initialData: monthData,
       ),
     );
+  }
+
+  void _openPrayerTimingScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PrayerTimingScreen(controller: _prayerController),
+      ),
+    );
+  }
+
+  void _openDailyDuaScreen() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const DailyDuaScreen()));
+  }
+
+  void _openTasbeehScreen() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const TasbeehScreen()));
   }
 
   void _showGoToPageDialog() {
@@ -288,14 +325,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 18),
-                _DatePrayerCard(
-                  accentColor: accentColor,
-                  day: today,
-                  isLoading: isLoading,
-                  errorMessage: errorText,
-                  onCalendarTap: monthData != null
-                      ? () => _openCalendar(monthData)
-                      : null,
+                AnimatedBuilder(
+                  animation: _prayerController,
+                  builder: (context, _) {
+                    return _DatePrayerCard(
+                      accentColor: accentColor,
+                      day: today,
+                      isCalendarLoading: isLoading,
+                      calendarErrorMessage: errorText,
+                      prayerController: _prayerController,
+                      onCalendarTap: monthData != null
+                          ? () => _openCalendar(monthData)
+                          : null,
+                      onPrayerTap: _openPrayerTimingScreen,
+                    );
+                  },
                 ),
                 const SizedBox(height: 25),
                 Row(
@@ -367,15 +411,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     _FeatureCard(
                       width: cardWidth,
-                      icon: Icon(Icons.mosque, size: 45, color: accentColor),
-                      title: 'Prayer Timing',
-                      subtitle: 'View daily schedules',
+                      icon: Icon(
+                        Icons.self_improvement,
+                        size: 45,
+                        color: accentColor,
+                      ),
+                      title: 'Daily Du\'aa',
+                      subtitle: 'Read the daily supplications',
+                      onTap: _openDailyDuaScreen,
                     ),
                     _FeatureCard(
                       width: cardWidth,
                       icon: _CounterIcon(color: accentColor),
                       title: 'Tasbeeh Counter',
                       subtitle: 'Digital counter for dhikr',
+                      onTap: _openTasbeehScreen,
                     ),
                   ],
                 ),
@@ -393,22 +443,74 @@ class _DatePrayerCard extends StatelessWidget {
   const _DatePrayerCard({
     required this.accentColor,
     required this.day,
-    required this.isLoading,
-    required this.errorMessage,
+    required this.isCalendarLoading,
+    required this.calendarErrorMessage,
+    required this.prayerController,
     this.onCalendarTap,
+    this.onPrayerTap,
   });
 
   final Color accentColor;
   final CalendarDay? day;
-  final bool isLoading;
-  final String? errorMessage;
+  final bool isCalendarLoading;
+  final String? calendarErrorMessage;
+  final PrayerTimesController prayerController;
   final VoidCallback? onCalendarTap;
+  final VoidCallback? onPrayerTap;
 
   @override
   Widget build(BuildContext context) {
     final String? hijriLabel = day?.hijriLabel;
     final String? gregorianLabel = day?.gregorianLabel;
-    final bool showError = errorMessage != null;
+    final bool showCalendarError = calendarErrorMessage != null;
+    final PrayerCountdownInfo? countdown = prayerController.nextPrayer;
+    final bool hasPrayerData = prayerController.today != null;
+    final bool prayerLoading = !hasPrayerData && prayerController.isLoading;
+    final bool prayerRefreshing =
+        prayerController.isRefreshing && hasPrayerData;
+    final String? prayerError = prayerController.errorMessage;
+    final String nextLabel = countdown != null
+        ? countdown.slot.label
+        : prayerLoading
+        ? 'Loading...'
+        : 'Unavailable';
+    final Widget countdownWidget = () {
+      if (prayerLoading) {
+        return const SizedBox(
+          width: 22,
+          height: 22,
+          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+        );
+      }
+      final String display = countdown != null
+          ? _formatCountdown(countdown.remaining)
+          : '-- : -- : --';
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            display,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              letterSpacing: 1.2,
+            ),
+          ),
+          if (prayerRefreshing) ...[
+            const SizedBox(width: 8),
+            const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ],
+      );
+    }();
 
     return Container(
       decoration: BoxDecoration(
@@ -440,11 +542,11 @@ class _DatePrayerCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (isLoading)
+                          if (isCalendarLoading)
                             const _PlaceholderBar(width: 160)
-                          else if (showError)
+                          else if (showCalendarError)
                             Text(
-                              errorMessage!,
+                              calendarErrorMessage!,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -461,7 +563,7 @@ class _DatePrayerCard extends StatelessWidget {
                               ),
                             ),
                           const SizedBox(height: 8),
-                          if (isLoading)
+                          if (isCalendarLoading)
                             const _PlaceholderBar(width: 200)
                           else
                             Text(
@@ -482,7 +584,9 @@ class _DatePrayerCard extends StatelessWidget {
                         size: 26,
                       ),
                       onPressed:
-                          (onCalendarTap != null && !isLoading && !showError)
+                          (onCalendarTap != null &&
+                              !isCalendarLoading &&
+                              !showCalendarError)
                           ? onCalendarTap
                           : null,
                       tooltip: 'Open calendar',
@@ -491,33 +595,84 @@ class _DatePrayerCard extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xFF0D8A3B),
-                borderRadius: BorderRadius.only(
+            Material(
+              color: const Color(0xFF0D8A3B),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 14,
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.access_time, color: Colors.white, size: 22),
-                    SizedBox(width: 12),
-                    Text(
-                      'Prayer Times',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                onTap: onPrayerTap,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.18),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          Icons.access_time,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  'Prayer Times',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const Spacer(),
+                                countdownWidget,
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            if (prayerError != null && countdown == null)
+                              Text(
+                                prayerError,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFFFFE8A6),
+                                ),
+                              )
+                            else
+                              Text(
+                                nextLabel,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Icon(Icons.chevron_right, color: Colors.white),
+                    ],
+                  ),
                 ),
               ),
             ),
