@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../app_settings.dart';
 import '../widgets/custom_button.dart';
 import 'onboarding/onboarding_screen.dart';
 
@@ -13,6 +15,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppSettings settings = AppSettingsScope.of(context);
     return Scaffold(
       backgroundColor: Color(0xFF181A1B),
       body: Container(
@@ -82,13 +85,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
               CustomButton(
                 text: 'English',
                 isSelected: selectedLanguage == 'English',
-                onTap: () => setState(() => selectedLanguage = 'English'),
+                onTap: () {
+                  setState(() => selectedLanguage = 'English');
+                  settings.updateHomeLanguage(HomeLanguage.english);
+                },
               ),
               SizedBox(height: 16),
               CustomButton(
                 text: 'اردو',
                 isSelected: selectedLanguage == 'اردو',
-                onTap: () => setState(() => selectedLanguage = 'اردو'),
+                onTap: () {
+                  setState(() => selectedLanguage = 'اردو');
+                  settings.updateHomeLanguage(HomeLanguage.urdu);
+                },
               ),
 
               SizedBox(height: 30),

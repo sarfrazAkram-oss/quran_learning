@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../app_settings.dart';
 import '../services/calendar_service.dart';
 import '../services/prayer_time_service.dart';
 import '../services/quran_page_service.dart';
@@ -11,6 +12,7 @@ import 'bookmark/bookmark_screen.dart';
 import 'daily_dua_screen.dart';
 import 'holy_quran_para_detail_screen.dart';
 import 'prayer_timing_screen.dart';
+import 'settings_screen.dart';
 import 'tasbeeh_screen.dart';
 
 String _formatCountdown(Duration duration) {
@@ -63,6 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
       return 'قرآن لرن میں خوش آمدید';
     }
     return 'Welcome back to Quran Learn';
+  }
+
+  void _openSettings() {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const SettingsScreen()));
+  }
+
+  String _cardTitleFor(
+    HomeLanguage language, {
+    required String english,
+    required String urdu,
+  }) {
+    return language == HomeLanguage.urdu ? urdu : english;
   }
 
   void _openCalendar(CalendarMonthData monthData) {
@@ -280,6 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double cardWidth = (screenWidth - 60) / 2;
     final String greeting = _localizedGreeting();
+    final HomeLanguage homeLanguage = AppSettingsScope.of(context).homeLanguage;
 
     return Scaffold(
       backgroundColor: const Color(0xFF181A1B),
@@ -302,9 +319,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.menu, size: 32, color: Colors.white),
-                    Text(
+                  children: [
+                    const Text(
                       'Quran Learn',
                       style: TextStyle(
                         fontSize: 22,
@@ -312,6 +328,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                         letterSpacing: 0.3,
                       ),
+                    ),
+                    IconButton(
+                      onPressed: _openSettings,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 40,
+                      ),
+                      icon: const Icon(
+                        Icons.menu,
+                        size: 32,
+                        color: Colors.white,
+                      ),
+                      tooltip: 'Settings',
                     ),
                   ],
                 ),
@@ -352,7 +382,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 45,
                         color: accentColor,
                       ),
-                      title: 'Holy Quran',
+                      title: _cardTitleFor(
+                        homeLanguage,
+                        english: 'Holy Quran',
+                        urdu: 'قرآن پاک',
+                      ),
                       subtitle: 'Read the Holy Quran',
                       onTap: () =>
                           Navigator.of(context).pushNamed('/holy-quran'),
@@ -364,7 +398,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 45,
                         color: accentColor,
                       ),
-                      title: 'Tajweed Quran',
+                      title: _cardTitleFor(
+                        homeLanguage,
+                        english: 'Tajweed Quran',
+                        urdu: 'تجوید قرآن',
+                      ),
                       subtitle: 'Learn pronunciation',
                       onTap: () => Navigator.of(context).pushNamed('/tajweed'),
                     ),
@@ -381,7 +419,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 45,
                         color: accentColor,
                       ),
-                      title: 'Go To Page',
+                      title: _cardTitleFor(
+                        homeLanguage,
+                        english: 'Go To Page',
+                        urdu: 'صفحہ کھولیں',
+                      ),
                       subtitle: 'Jump to a specific page',
                       onTap: _showGoToPageDialog,
                     ),
@@ -392,7 +434,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 45,
                         color: accentColor,
                       ),
-                      title: 'Bookmarks',
+                      title: _cardTitleFor(
+                        homeLanguage,
+                        english: 'Bookmarks',
+                        urdu: 'نشان زدہ صفحات',
+                      ),
                       subtitle: 'Access your saved pages',
                       onTap: () {
                         Navigator.push(
@@ -416,14 +462,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 45,
                         color: accentColor,
                       ),
-                      title: 'Daily Du\'aa',
+                      title: _cardTitleFor(
+                        homeLanguage,
+                        english: 'Daily Du\'aa',
+                        urdu: 'روزانہ دعائیں',
+                      ),
                       subtitle: 'Read the daily supplications',
                       onTap: _openDailyDuaScreen,
                     ),
                     _FeatureCard(
                       width: cardWidth,
                       icon: _CounterIcon(color: accentColor),
-                      title: 'Tasbeeh Counter',
+                      title: _cardTitleFor(
+                        homeLanguage,
+                        english: 'Tasbeeh Counter',
+                        urdu: 'تسبیح کاؤنٹر',
+                      ),
                       subtitle: 'Digital counter for dhikr',
                       onTap: _openTasbeehScreen,
                     ),

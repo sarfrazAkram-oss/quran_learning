@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
+import '../app_settings.dart';
 import '../data/para_data.dart';
 
 class ParaDetailScreen extends StatefulWidget {
@@ -56,10 +59,24 @@ class _ParaDetailScreenState extends State<ParaDetailScreen> {
     _pdfController.zoomLevel = desiredZoom;
   }
 
+  void _maybeVibrateOnPageChange(
+    PdfPageChangedDetails details,
+    AppSettings settings,
+  ) {
+    if (details.oldPageNumber == details.newPageNumber) {
+      return;
+    }
+    if (!settings.vibrateOnSwipe) {
+      return;
+    }
+    HapticFeedback.lightImpact();
+  }
+
   @override
   Widget build(BuildContext context) {
     const backgroundColor = Color(0xFF181A1B);
     final pdfAsset = widget.para.pdfAsset;
+    final AppSettings settings = AppSettingsScope.of(context);
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -95,6 +112,8 @@ class _ParaDetailScreenState extends State<ParaDetailScreen> {
                     pageLayoutMode: PdfPageLayoutMode.single,
                     pageSpacing: 0,
                     scrollDirection: PdfScrollDirection.horizontal,
+                    onPageChanged: (details) =>
+                        _maybeVibrateOnPageChange(details, settings),
                     onDocumentLoaded: (details) {
                       _firstPageSize = details.document.pages[0].size;
                       _updateZoomToFitHeight();
