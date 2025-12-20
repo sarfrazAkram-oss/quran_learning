@@ -73,16 +73,18 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const Color backgroundColor = Color(0xFF181A1B);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColor,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
+            color: Colors.white,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -91,43 +93,46 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          children: List.generate(_entries.length, (index) {
-            final TasbeehEntry entry = _entries[index];
-            final int count = _counts[index];
+      body: ColoredBox(
+        color: backgroundColor,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: Column(
+            children: List.generate(_entries.length, (index) {
+              final TasbeehEntry entry = _entries[index];
+              final int count = _counts[index];
 
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: index == _entries.length - 1 ? 0 : 22,
-              ),
-              child: _TasbeehCard(
-                backgroundColor: _cardColor,
-                titleColor: _titleGreen,
-                captionColor: _captionColor,
-                counterBackground: _counterBackground,
-                actionBackground: _actionBackground,
-                actionPrimary: _accentGreen,
-                name: entry.name,
-                meaning: entry.meaning,
-                arabic: entry.arabic,
-                count: count,
-                isCustom: entry.isCustom,
-                onReset: () => setState(() => _counts[index] = 0),
-                onIncrement: () => setState(() => _counts[index] += 1),
-                onDecrement: () => setState(() {
-                  if (_counts[index] > 0) {
-                    _counts[index] -= 1;
-                  }
-                }),
-              ),
-            );
-          }),
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: index == _entries.length - 1 ? 0 : 22,
+                ),
+                child: _TasbeehCard(
+                  backgroundColor: _cardColor,
+                  titleColor: _titleGreen,
+                  captionColor: _captionColor,
+                  counterBackground: _counterBackground,
+                  actionBackground: _actionBackground,
+                  actionPrimary: _accentGreen,
+                  name: entry.name,
+                  meaning: entry.meaning,
+                  arabic: entry.arabic,
+                  count: count,
+                  isCustom: entry.isCustom,
+                  onReset: () => setState(() => _counts[index] = 0),
+                  onIncrement: () => setState(() => _counts[index] += 1),
+                  onDecrement: () => setState(() {
+                    if (_counts[index] > 0) {
+                      _counts[index] -= 1;
+                    }
+                  }),
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );

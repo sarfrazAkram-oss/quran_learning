@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class DailyDuaScreen extends StatefulWidget {
@@ -13,10 +14,12 @@ class _DailyDuaScreenState extends State<DailyDuaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const backgroundColor = Color(0xFF181A1B);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F6),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F7F6),
+        backgroundColor: backgroundColor,
         elevation: 0,
         centerTitle: true,
         title: const Text(
@@ -24,23 +27,33 @@ class _DailyDuaScreenState extends State<DailyDuaScreen> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF10201A),
+            color: Colors.white,
           ),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF10201A)),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
             children: [
-              SfPdfViewer.asset(
-                'assets/duas.pdf',
-                controller: _controller,
-                enableDoubleTapZooming: false,
-                canShowScrollHead: false,
-                enableTextSelection: true,
-                interactionMode: PdfInteractionMode.pan,
-                pageLayoutMode: PdfPageLayoutMode.single,
+              Positioned.fill(
+                child: ColoredBox(
+                  color: backgroundColor,
+                  child: SfPdfViewerTheme(
+                    data: SfPdfViewerThemeData(
+                      backgroundColor: backgroundColor,
+                    ),
+                    child: SfPdfViewer.asset(
+                      'assets/duas.pdf',
+                      controller: _controller,
+                      enableDoubleTapZooming: false,
+                      canShowScrollHead: false,
+                      enableTextSelection: true,
+                      interactionMode: PdfInteractionMode.pan,
+                      pageLayoutMode: PdfPageLayoutMode.single,
+                    ),
+                  ),
+                ),
               ),
               Positioned.fill(
                 child: GestureDetector(

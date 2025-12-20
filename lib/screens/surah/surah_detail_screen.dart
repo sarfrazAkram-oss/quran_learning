@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class SurahDetailScreen extends StatelessWidget {
@@ -15,33 +16,43 @@ class SurahDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const backgroundColor = Color(0xFF181A1B);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       body: Column(
         children: [
           _SurahHeader(englishName: englishName),
           Expanded(
-            child: isPdf
-                ? SfPdfViewer.asset(
-                    assetPath,
-                    canShowScrollHead: false,
-                    canShowScrollStatus: false,
-                    scrollDirection: PdfScrollDirection.horizontal,
-                    pageLayoutMode: PdfPageLayoutMode.single,
-                  )
-                : Center(
-                    child: InteractiveViewer(
-                      minScale: 0.8,
-                      maxScale: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(assetPath, fit: BoxFit.contain),
+            child: ColoredBox(
+              color: backgroundColor,
+              child: isPdf
+                  ? SfPdfViewerTheme(
+                      data: SfPdfViewerThemeData(
+                        backgroundColor: backgroundColor,
+                      ),
+                      child: SfPdfViewer.asset(
+                        assetPath,
+                        canShowScrollHead: false,
+                        canShowScrollStatus: false,
+                        scrollDirection: PdfScrollDirection.horizontal,
+                        pageLayoutMode: PdfPageLayoutMode.single,
+                      ),
+                    )
+                  : Center(
+                      child: InteractiveViewer(
+                        minScale: 0.8,
+                        maxScale: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(assetPath, fit: BoxFit.contain),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+            ),
           ),
         ],
       ),

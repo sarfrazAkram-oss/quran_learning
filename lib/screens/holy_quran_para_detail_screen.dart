@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../data/holy_quran_para_data.dart';
 
@@ -78,26 +79,29 @@ class _HolyQuranParaDetailScreenState extends State<HolyQuranParaDetailScreen> {
             (_) => _updateZoomToFitHeight(),
           );
 
-          return SfPdfViewer.asset(
-            widget.para.pdfAsset,
-            controller: _pdfController,
-            canShowPaginationDialog: false,
-            canShowScrollHead: false,
-            canShowScrollStatus: false,
-            pageLayoutMode: PdfPageLayoutMode.single,
-            pageSpacing: 0,
-            scrollDirection: PdfScrollDirection.horizontal,
-            onDocumentLoaded: (details) {
-              _firstPageSize = details.document.pages[0].size;
-              final int clampedPage = widget.initialPage.clamp(
-                1,
-                details.document.pages.count,
-              );
-              if (_pdfController.pageNumber != clampedPage) {
-                _pdfController.jumpToPage(clampedPage);
-              }
-              _updateZoomToFitHeight();
-            },
+          return SfPdfViewerTheme(
+            data: SfPdfViewerThemeData(backgroundColor: backgroundColor),
+            child: SfPdfViewer.asset(
+              widget.para.pdfAsset,
+              controller: _pdfController,
+              canShowPaginationDialog: false,
+              canShowScrollHead: false,
+              canShowScrollStatus: false,
+              pageLayoutMode: PdfPageLayoutMode.single,
+              pageSpacing: 0,
+              scrollDirection: PdfScrollDirection.horizontal,
+              onDocumentLoaded: (details) {
+                _firstPageSize = details.document.pages[0].size;
+                final int clampedPage = widget.initialPage.clamp(
+                  1,
+                  details.document.pages.count,
+                );
+                if (_pdfController.pageNumber != clampedPage) {
+                  _pdfController.jumpToPage(clampedPage);
+                }
+                _updateZoomToFitHeight();
+              },
+            ),
           );
         },
       ),
